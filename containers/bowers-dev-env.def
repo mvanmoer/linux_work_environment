@@ -1,0 +1,102 @@
+Bootstrap: library
+From: ubuntu:22.04
+Stage: build
+
+# post: commands executed in container, after base OS install
+%post 
+
+    # this is a known annoyance: without these, the build will halt and
+    # wait for timezone info, but is also non-responsive, so it hangs.
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=America/Chicago
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+    apt-get -y update
+    apt-get -y upgrade
+
+    # standard Ubuntu dev tools
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        curl \
+        git \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        openssh-client \
+        unzip \
+        wget
+
+    # user-specific dev tools
+    apt-get install -y --no-install-recommends \
+        htop \
+        neovim \
+        ripgrep \
+        tmux \
+        zsh
+
+    # MVM: unclear if CRAN is needed 
+
+    # base R install
+    apt-get install -y --no-install-recommends \
+        r-base \
+        r-base-dev 
+
+    # Miniforge, also installs Python, Mamba, Conda
+    # stolen from various SO answers, representative one at 77441093
+    readonly mamba_installer="Mambaforge-$(uname)-$(uname -m).sh"
+    readonly mamba_version="24.1.2-0"
+    readonly mamba_prefix="/opt/mamba"
+    wget "https://github.com/conda-forge/miniforge/releases/download/${mamba_version}/${mamba_installer}"
+    bash "${mamba_installer}" -b -p "${mamba_prefix}"
+    rm "${mamba_installer}"
+    export PATH="${mamba_prefix}/bin:$PATH"
+ 
+
+    # MVM: adapted from geniac.readthedocs.io
+    # by default launching an interactive Singularity shell does NOT
+    # execute any profile or rc files. 
+    # The idea is to create a globally excessible bashrc which can be 
+    # sourced in %environment. It works, except that $CONDA_PROMPT_MODIFIER
+    # does NOT get applied to the prompt.
+    mkdir -p /opt/etc
+    git clone https://github.com/bowers-illinois-edu/linux_work_environment.git && \
+        cd linux_work_environment && \
+        mamba create --name mambaR --file conda_packages.txt && \
+        echo "#!/bin/bash" > ~/.bashrc && \
+        mamba init bash && \
+        echo "mamba activate mambaR" >> ~/.bashrc && \
+        echo "echo MVM correct bashrc sourced" >> ~/.bashrc && \
+        cp ~/.bashrc /opt/etc/bashrc
+
+
+    # R packages unavailable through Mamba
+    mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3
+    # dataPreparation
+    R --slave -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
+
+    # requires BiocManager::install() waiting on PR approval which adds r-biocmanager to mamba 
+    # onlineFDR
+   
+    # not sure I have located the correct package.
+    # nvimcom
+  
+    # this might be trickier than it should be 
+    # TODO set zsh as default 
+    # TODO Oh My Zsh
+    # TODO Nerd Fonts
+    # TODO kickstart.nvim 
+   
+    # clean up
+    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+
+%environment
+    # source the global bashrc created above
+    source /opt/etc/bashrc
+    export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
+
+%labels
+    Author mvanmoer
