@@ -96,6 +96,8 @@ Stage: build
 %environment
     # source the global bashrc created above
     source /opt/etc/bashrc
+    # make sure to NOT pick up an R_LIBS which might be 
+    # accessible if $HOME is mapped
     export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
 
 %labels
