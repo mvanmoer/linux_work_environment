@@ -25,9 +25,14 @@ Stage: build
         libcurl4-openssl-dev \
         libssl-dev \
         libxml2-dev \
+        locales \
         openssh-client \
         unzip \
         wget
+
+    # set locales specifically or R will segfault
+    echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+    locale-gen && update-locale LANG=en_US.UTF-8
 
     # user-specific dev tools
     apt-get install -y --no-install-recommends \
