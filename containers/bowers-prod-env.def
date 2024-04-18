@@ -117,3 +117,4 @@ Stage: build
 
 %labels
     Author mvanmoer
+    Version v0.0.2
