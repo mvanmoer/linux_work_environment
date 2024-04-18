@@ -31,7 +31,7 @@ This will bring up a `Singularity>` prompt and now one can install additional so
 ## Using ZSH
 There are two ways to get to ZSH:
 
-1. `$ singularity exec <sif>` - the `%runscript` calls `/bin/zsh` directly.
+1. `$ singularity run <sif>` - the `%runscript` calls `/bin/zsh` directly. -- Use this method for Oh My Zsh to work.
 
 2. `$ singularity shell --shell /bin/zsh <sif>` 
 
@@ -43,7 +43,6 @@ There are two ways to get to ZSH:
 ## TODOs
 TODO: install onlineFDR
 TODO: install nvimcom
-TODO: install Oh My Zsh
 TODO: install Nerd Fonts
 TODO: install kickstart.nvim
 TODO: consider putting a signed sif on a repo like dockerhub
