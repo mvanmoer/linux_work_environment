@@ -17,6 +17,17 @@ Because they use the actual hardware and OS kernel from the host machine, this c
 
 It is considered best practice to share both the .def and the .sif. Currently, a .sif is available on the ICC in the project directory.
 
+## Container Development vs. Production
+Containers aren't normally modifiable because they are often meant to replicate a set environment for reproducing on other resources. A compromise approach is to build a sandbox version of the container. 
+
+`$ sudo singularity build --sandbox mysandbox mycontainer.def`
+
+Instead of creating a .sif, this will make a directory `mysandbox/`. This can be `cd`'d into to look around, but shouldn't be modified directly. To use the sandbox, launch with:
+
+`$ sudo singularity shell --writable mysandbox`
+
+This will bring up a `Singularity>` prompt and now one can install additional software or make other changes. However, there is not a good way to export those back into the definition file except through copy-and-paste.
+
 ## TODOs
 TODO: install onlineFDR
 TODO: install nvimcom
