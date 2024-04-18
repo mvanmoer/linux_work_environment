@@ -71,11 +71,12 @@ Stage: build
     git clone https://github.com/bowers-illinois-edu/linux_work_environment.git && \
         cd linux_work_environment && \
         mamba create --name mambaR --file conda_packages.txt && \
-        echo "#!/bin/bash" > ~/.bashrc && \
-        mamba init bash && \
-        echo "mamba activate mambaR" >> ~/.bashrc && \
-        echo "echo MVM correct bashrc sourced" >> ~/.bashrc && \
-        cp ~/.bashrc /opt/etc/bashrc
+        echo "#!/bin/zsh" > ~/.zshrc && \
+        mamba init zsh && \
+        echo "mamba activate mambaR" >> ~/.zshrc && \
+        echo "echo MVM: correct zshrc sourced" >> ~/.zshrc && \
+        cp ~/.zshrc /opt/etc/zshrc
+
 
 
     # R packages unavailable through Mamba
@@ -90,7 +91,6 @@ Stage: build
     # nvimcom
   
     # this might be trickier than it should be 
-    # TODO set zsh as default 
     # TODO Oh My Zsh
     # TODO Nerd Fonts
     # TODO kickstart.nvim 
@@ -100,11 +100,15 @@ Stage: build
     apt-get clean
 
 %environment
-    # source the global bashrc created above
-    source /opt/etc/bashrc
+    # source the global zshrc created above
+    export SHELL=/bin/zsh
+    source /opt/etc/zshrc
     # make sure to NOT pick up an R_LIBS which might be 
     # accessible if $HOME is mapped
     export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
+
+%runscript
+    exec /bin/zsh "$@"
 
 %labels
     Author mvanmoer
