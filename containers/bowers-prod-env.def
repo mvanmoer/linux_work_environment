@@ -46,9 +46,12 @@ Stage: build
     # MVM: unclear if CRAN is needed 
 
     # base R install
+    # packages unavailable through Mamba: dataPreparation
     apt-get install -y --no-install-recommends \
         r-base \
-        r-base-dev 
+        r-base-dev && \
+        mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3 && \
+        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
 
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
@@ -77,15 +80,6 @@ Stage: build
         echo "echo MVM: correct zshrc sourced" >> ~/.zshrc && \
         cp ~/.zshrc /opt/etc/zshrc
 
-
-
-    # R packages unavailable through Mamba
-    mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3
-    # dataPreparation
-    R --slave -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
-
-    # requires BiocManager::install() waiting on PR approval which adds r-biocmanager to mamba 
-    # onlineFDR
    
     # not sure I have located the correct package.
     # nvimcom
