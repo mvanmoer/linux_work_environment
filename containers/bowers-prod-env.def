@@ -62,12 +62,11 @@ Stage: build
     bash "${mamba_installer}" -b -p "${mamba_prefix}"
     rm "${mamba_installer}"
     export PATH="${mamba_prefix}/bin:$PATH"
- 
 
     # MVM: adapted from geniac.readthedocs.io
     # by default launching an interactive Singularity shell does NOT
     # execute any profile or rc files. 
-    # The idea is to create a globally excessible bashrc which can be 
+    # The idea is to create a globally excessible zshrc which can be 
     # sourced in %environment. It works, except that $CONDA_PROMPT_MODIFIER
     # does NOT get applied to the prompt.
     mkdir -p /opt/etc
@@ -101,7 +100,6 @@ Stage: build
     export SHELL=/bin/zsh
     source /opt/etc/zshrc
     
-    # 
     # make sure to NOT pick up an R_LIBS which might be 
     # accessible if $HOME is mapped
     export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
