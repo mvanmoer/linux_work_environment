@@ -28,10 +28,21 @@ Instead of creating a .sif, this will make a directory `mysandbox/`. This can be
 
 This will bring up a `Singularity>` prompt and now one can install additional software or make other changes. However, there is not a good way to export those back into the definition file except through copy-and-paste.
 
+## Using ZSH
+There are two ways to get to ZSH:
+
+1. `$ singularity exec <sif>` - the `%runscript` calls `/bin/zsh` directly.
+
+2. `$ singularity shell --shell /bin/zsh <sif>` 
+
+### NOTES 
+
+- MVM: had to also add `--contain` or it would still default to BASH somehow. 
+- MVM: had the zsh-newuser-install script pop up each time. I think this will be avoided since you'll already have a `.zshrc` but need to verify.
+
 ## TODOs
 TODO: install onlineFDR
 TODO: install nvimcom
-TODO: default to ZSH instead of BASH
 TODO: install Oh My Zsh
 TODO: install Nerd Fonts
 TODO: install kickstart.nvim
