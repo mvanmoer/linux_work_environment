@@ -73,6 +73,8 @@ Stage: build
     git clone https://github.com/bowers-illinois-edu/linux_work_environment.git && \
         cd linux_work_environment && \
         mamba create --name mambaR --file conda_packages.txt && \
+        conda config --add channels bioconda && \
+        mamba install -n mambaR -c bioconda bioconductor-onlinefdr && \
         echo "#!/bin/zsh" > ~/.zshrc && \
         mamba init zsh && \
         echo "mamba activate mambaR" >> ~/.zshrc && \
