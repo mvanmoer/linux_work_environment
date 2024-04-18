@@ -89,9 +89,12 @@ Stage: build
    
     # not sure I have located the correct package.
     # nvimcom
-  
+
+    # Oh My Zsh
+    # This sh command was given as an example in install.sh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended   
+
     # this might be trickier than it should be 
-    # TODO Oh My Zsh
     # TODO Nerd Fonts
     # TODO kickstart.nvim 
    
@@ -103,6 +106,8 @@ Stage: build
     # source the global zshrc created above
     export SHELL=/bin/zsh
     source /opt/etc/zshrc
+    
+    # 
     # make sure to NOT pick up an R_LIBS which might be 
     # accessible if $HOME is mapped
     export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
