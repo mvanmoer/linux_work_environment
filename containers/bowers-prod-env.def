@@ -46,9 +46,12 @@ Stage: build
     # MVM: unclear if CRAN is needed 
 
     # base R install
+    # packages unavailable through Mamba: dataPreparation
     apt-get install -y --no-install-recommends \
         r-base \
-        r-base-dev 
+        r-base-dev && \
+        mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3 && \
+        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
 
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
@@ -59,39 +62,34 @@ Stage: build
     bash "${mamba_installer}" -b -p "${mamba_prefix}"
     rm "${mamba_installer}"
     export PATH="${mamba_prefix}/bin:$PATH"
- 
 
     # MVM: adapted from geniac.readthedocs.io
     # by default launching an interactive Singularity shell does NOT
     # execute any profile or rc files. 
-    # The idea is to create a globally excessible bashrc which can be 
+    # The idea is to create a globally excessible zshrc which can be 
     # sourced in %environment. It works, except that $CONDA_PROMPT_MODIFIER
     # does NOT get applied to the prompt.
     mkdir -p /opt/etc
     git clone https://github.com/bowers-illinois-edu/linux_work_environment.git && \
         cd linux_work_environment && \
         mamba create --name mambaR --file conda_packages.txt && \
-        echo "#!/bin/bash" > ~/.bashrc && \
-        mamba init bash && \
-        echo "mamba activate mambaR" >> ~/.bashrc && \
-        echo "echo MVM correct bashrc sourced" >> ~/.bashrc && \
-        cp ~/.bashrc /opt/etc/bashrc
+        conda config --add channels bioconda && \
+        mamba install -n mambaR -c bioconda bioconductor-onlinefdr && \
+        echo "#!/bin/zsh" > ~/.zshrc && \
+        mamba init zsh && \
+        echo "mamba activate mambaR" >> ~/.zshrc && \
+        echo "echo MVM: correct zshrc sourced" >> ~/.zshrc && \
+        cp ~/.zshrc /opt/etc/zshrc
 
-
-    # R packages unavailable through Mamba
-    mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3
-    # dataPreparation
-    R --slave -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
-
-    # requires BiocManager::install() waiting on PR approval which adds r-biocmanager to mamba 
-    # onlineFDR
    
     # not sure I have located the correct package.
     # nvimcom
-  
+
+    # Oh My Zsh
+    # This sh command was given as an example in install.sh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended   
+
     # this might be trickier than it should be 
-    # TODO set zsh as default 
-    # TODO Oh My Zsh
     # TODO Nerd Fonts
     # TODO kickstart.nvim 
    
@@ -100,11 +98,17 @@ Stage: build
     apt-get clean
 
 %environment
-    # source the global bashrc created above
-    source /opt/etc/bashrc
+    # source the global zshrc created above
+    export SHELL=/bin/zsh
+    source /opt/etc/zshrc
+    
     # make sure to NOT pick up an R_LIBS which might be 
     # accessible if $HOME is mapped
     export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
 
+%runscript
+    exec /bin/zsh "$@"
+
 %labels
     Author mvanmoer
+    Version v0.0.2

@@ -38,8 +38,8 @@ export ZSH="$HOME/.oh-my-zsh"
 
 To test, on the campus cluster cd to `/projects/illinois/las/pol/jwbowers` and run `interactive.sh`. This is a wrapper around an srun call to get on a particular node (see note about why inside script.) Once the interactive job is launched, do
 ```
-$ singularity shell <name-of-sif>
+$ singularity run <name-of-sif>
 ```
-which should put you in a container. Note that the mambaR env will not be indicated in the prompt, but it is active.
+which should put you in a container with an Oh My Zsh-style prompt
 
 
