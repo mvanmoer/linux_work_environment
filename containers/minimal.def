@@ -24,6 +24,7 @@ Stage: build
         git \
         gsl-bin \
         libcurl4-openssl-dev \
+        libfreetype-dev \
         libgmp-dev \
         libssl-dev \
         libtiff-dev \
