@@ -22,6 +22,7 @@ Stage: build
         cmake \
         curl \
         git \
+        gsl-bin \
         libcurl4-openssl-dev \
         libssl-dev \
         libtiff-dev \
