@@ -24,6 +24,7 @@ Stage: build
         git \
         libcurl4-openssl-dev \
         libssl-dev \
+        libtiff-dev \
         libxml2-dev \
         locales \
         openssh-client \
