@@ -43,19 +43,6 @@ Stage: build
         tmux \
         zsh
 
-    # MVM: unclear if CRAN is needed 
-
-    # base R install
-    # packages unavailable through Mamba: dataPreparation
-    # remotes gets installed through Mamba, but it is not available during
-    # %post, so we explicitly install it, and then install manytestsr
-    apt-get install -y --no-install-recommends \
-        r-base \
-        r-base-dev && \
-        mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3 && \
-        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)' && \
-        R --no-echo -e 'install.packages("remotes", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE); remotes::install_github("bowers-illinois-edu/manytestsr", quiet=TRUE, upgrade="never")'
-
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
     readonly mamba_installer="Mambaforge-$(uname)-$(uname -m).sh"
@@ -66,12 +53,16 @@ Stage: build
     rm "${mamba_installer}"
     export PATH="${mamba_prefix}/bin:$PATH"
 
+    # using mamba to install R because later it seems to find my R, shadowing of /usr/bin?
+    mamba install r
+
     # MVM: adapted from geniac.readthedocs.io
     # by default launching an interactive Singularity shell does NOT
     # execute any profile or rc files. 
     # The idea is to create a globally excessible zshrc which can be 
     # sourced in %environment. It works, except that $CONDA_PROMPT_MODIFIER
     # does NOT get applied to the prompt.
+
     mkdir -p /opt/etc
     git clone https://github.com/bowers-illinois-edu/linux_work_environment.git && \
         cd linux_work_environment && \
@@ -104,10 +95,11 @@ Stage: build
     # source the global zshrc created above
     export SHELL=/bin/zsh
     source /opt/etc/zshrc
-    
+   
+    # MVM - this was experimental when installing dataPreparation 
     # make sure to NOT pick up an R_LIBS which might be 
     # accessible if $HOME is mapped
-    export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
+    #export R_LIBS_USER=/opt/R/x86_64-pc-linux-gnu-library/4.3
 
 %runscript
     exec /bin/zsh "$@"
