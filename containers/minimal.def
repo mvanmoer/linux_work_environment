@@ -22,10 +22,13 @@ Stage: build
         cmake \
         curl \
         git \
-        gsl-bin \
         libcurl4-openssl-dev \
+        libfontconfig1-dev \
         libfreetype-dev \
+        libfreetype6 \
+        libfreetype6-dev \
         libgmp-dev \
+        libgsl-dev \
         libssl-dev \
         libtiff-dev \
         libxml2-dev \
