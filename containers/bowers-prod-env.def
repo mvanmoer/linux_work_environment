@@ -51,7 +51,7 @@ Stage: build
         r-base \
         r-base-dev && \
         mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3 && \
-        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'       
+        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
 
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
