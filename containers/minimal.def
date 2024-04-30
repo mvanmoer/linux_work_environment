@@ -43,24 +43,9 @@ Stage: build
 
     apt-get install -y --no-install-recommends r-base r-base-dev
 
-    # Miniforge, also installs Python, Mamba, Conda
-    # stolen from various SO answers, representative one at 77441093
-    readonly mamba_installer="Mambaforge-$(uname)-$(uname -m).sh"
-    readonly mamba_version="24.1.2-0"
-    readonly mamba_prefix="/opt/mamba"
-    wget "https://github.com/conda-forge/miniforge/releases/download/${mamba_version}/${mamba_installer}"
-    bash "${mamba_installer}" -b -p "${mamba_prefix}"
-    rm "${mamba_installer}"
-    export PATH="${mamba_prefix}/bin:$PATH"
-
-    # using mamba to install R because later it seems to find my R, shadowing of /usr/bin?
-    mamba install r
-
-    # manytestsr repo requires remotes::install_github()
-    mamba install r-remotes
-
     # This increases the build time substantially.
-    R --no-echo -e 'remotes::install_github("bowers-illinois-edu/manytestsr", quiet=FALSE, upgrade="never")'
+    R --no-echo -e 'install.packages("remotes")'
+    R --no-echo -e 'remotes::install_github("bowers-illinois-edu/manytestsr", upgrade="always")'
    
     # clean up
     rm -rf /var/lib/apt/lists/*
