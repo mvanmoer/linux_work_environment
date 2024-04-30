@@ -41,6 +41,8 @@ Stage: build
     echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
     locale-gen && update-locale LANG=en_US.UTF-8
 
+    apt-get install -y --no-install-recommends r-base r-base-dev
+
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
     readonly mamba_installer="Mambaforge-$(uname)-$(uname -m).sh"
