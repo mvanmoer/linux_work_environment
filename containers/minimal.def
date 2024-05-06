@@ -46,7 +46,16 @@ Stage: build
     apt-get install -y --no-install-recommends r-base r-base-dev
 
     # This increases the build time substantially.
-    R --no-echo -e 'install.packages("remotes")'
+    # explicit use or /usr/lib/R/library - default is
+    # /usr/local/lib/R/site-library and either testthat or devtools insists on
+    # checking .Library instead of .libPaths()
+    R --no-echo -e 'install.packages("remotes", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("pkgdown", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("devtools", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("here", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("dtplyr", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("conflicted", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("bench", "/usr/lib/R/library")'
     R --no-echo -e 'remotes::install_github("bowers-illinois-edu/manytestsr", upgrade="always")'
    
     # clean up
