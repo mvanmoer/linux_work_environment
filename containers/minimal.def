@@ -27,8 +27,10 @@ Stage: build
         libfreetype-dev \
         libfreetype6 \
         libfreetype6-dev \
+        libfribidi-dev \
         libgmp-dev \
         libgsl-dev \
+        libharfbuzz-dev \
         libssl-dev \
         libtiff-dev \
         libxml2-dev \
