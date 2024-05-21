@@ -63,6 +63,10 @@ Stage: build
     R --no-echo -e 'install.packages("future", "/usr/lib/R/library")'
     R --no-echo -e 'install.packages("future.apply", "/usr/lib/R/library")'
 
+    # bind points for --bind in a writable sandbox
+    mkdir /mnt/manytestsr
+    mkdir /mnt/test_performance_sims
+
     # clean up
     rm -rf /var/lib/apt/lists/*
     apt-get clean
