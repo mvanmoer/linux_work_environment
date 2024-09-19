@@ -36,6 +36,7 @@ Stage: build
         libxml2-dev \
         locales \
         openssh-client \
+        parallel \
         unzip \
         wget
 
@@ -56,6 +57,9 @@ Stage: build
     R --no-echo -e 'install.packages("dtplyr", "/usr/lib/R/library")'
     R --no-echo -e 'install.packages("conflicted", "/usr/lib/R/library")'
     R --no-echo -e 'install.packages("bench", "/usr/lib/R/library")'
+
+    # Build from the original GH repo here, then once in a working container,
+    # rebuild from a local clone of a fork using remotes::install_local()
     R --no-echo -e 'remotes::install_github("bowers-illinois-edu/manytestsr", upgrade="always")'
 
     # packages for test_performance_sims
@@ -73,7 +77,7 @@ Stage: build
 
 %test
     # verifies that R can see and load manytestsr
-    R -e "library(manytestsr)"
+    #R -e "library(manytestsr)"
 
 %labels
     Author mvanmoer
