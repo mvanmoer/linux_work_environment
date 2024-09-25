@@ -1,0 +1,71 @@
+Bootstrap: library
+From: ubuntu:22.04
+Stage: build
+
+# post: commands executed in container, after base OS install
+%post 
+
+    # this is a known annoyance: without these, the build will halt and
+    # wait for timezone info, but is also non-responsive, so it hangs.
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=America/Chicago
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+    apt-get -y update
+    apt-get -y upgrade
+
+    # standard Ubuntu dev tools
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        curl \
+        git \
+        libcurl4-openssl-dev \
+        libfontconfig1-dev \
+        libfreetype-dev \
+        libfreetype6 \
+        libfreetype6-dev \
+        libfribidi-dev \
+        libgmp-dev \
+        libgsl-dev \
+        libharfbuzz-dev \
+        libssl-dev \
+        libtiff-dev \
+        libxml2-dev \
+        locales \
+        openssh-client \
+        unzip \
+        wget
+
+    # set locales specifically or R will segfault
+    echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+    locale-gen && update-locale LANG=en_US.UTF-8
+
+    apt-get install -y --no-install-recommends r-base r-base-dev
+
+    # This increases the build time substantially.
+    # explicit use or /usr/lib/R/library - default is
+    # /usr/local/lib/R/site-library and either testthat or devtools insists on
+    # checking .Library instead of .libPaths()
+    R --no-echo -e 'install.packages("remotes", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("pkgdown", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("devtools", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("here", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("dtplyr", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("conflicted", "/usr/lib/R/library")'
+    R --no-echo -e 'install.packages("bench", "/usr/lib/R/library")'
+    R --no-echo -e 'remotes::install_github("bowers-illinois-edu/manytestsr", upgrade="always")'
+   
+    # clean up
+    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+
+%test
+    # verifies that R can see and load manytestsr
+    R -e "library(manytestsr)"
+
+%labels
+    Author mvanmoer
+    Version v0.0.1

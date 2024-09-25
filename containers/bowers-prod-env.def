@@ -47,14 +47,11 @@ Stage: build
 
     # base R install
     # packages unavailable through Mamba: dataPreparation
-    # remotes gets installed through Mamba, but it is not available during
-    # %post, so we explicitly install it, and then install manytestsr
     apt-get install -y --no-install-recommends \
         r-base \
         r-base-dev && \
         mkdir -p /opt/R/x86_64-pc-linux-gnu-library/4.3 && \
-        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)' && \
-        R --no-echo -e 'install.packages("remotes", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE); remotes::install_github("bowers-illinois-edu/manytestsr", quiet=TRUE, upgrade="never")'
+        R --no-echo -e 'install.packages("dataPreparation", "/opt/R/x86_64-pc-linux-gnu-library/4.3", quiet=TRUE)'
 
     # Miniforge, also installs Python, Mamba, Conda
     # stolen from various SO answers, representative one at 77441093
