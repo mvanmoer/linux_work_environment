@@ -8,7 +8,7 @@ relying much on python. We have C++ code to compile within R packages.
 
 ## Interactive Mode
 
-They key pieces for interactive development (and bug squashing) for me are
+The key pieces for interactive development (and bug squashing) for me are
 neovim, tmux, htop, ripgrep.
 
 
