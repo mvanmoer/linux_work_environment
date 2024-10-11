@@ -67,6 +67,9 @@ Stage: build
     R --no-echo -e 'install.packages("future", "/usr/lib/R/library")'
     R --no-echo -e 'install.packages("future.apply", "/usr/lib/R/library")'
 
+    # this is a clone instead of an install because it is just R source
+    git clone https://github.com/bowers-illinois-edu/test_performance_sims.git 
+
     # bind points for --bind in a writable sandbox
     mkdir /mnt/manytestsr
     mkdir /mnt/test_performance_sims
@@ -81,4 +84,4 @@ Stage: build
 
 %labels
     Author mvanmoer
-    Version v0.0.1
+    Version v0.0.2
