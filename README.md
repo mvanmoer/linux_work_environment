@@ -41,5 +41,3 @@ To test, on the campus cluster cd to `/projects/illinois/las/pol/jwbowers` and r
 $ singularity run <name-of-sif>
 ```
 which should put you in a container with an Oh My Zsh-style prompt
-
-
