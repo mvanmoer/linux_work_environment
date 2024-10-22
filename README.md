@@ -8,7 +8,7 @@ relying much on python. We have C++ code to compile within R packages.
 
 ## Interactive Mode
 
-They key pieces for interactive development (and bug squashing) for me are
+The key pieces for interactive development (and bug squashing) for me are
 neovim, tmux, htop, ripgrep.
 
 
@@ -41,5 +41,3 @@ To test, on the campus cluster cd to `/projects/illinois/las/pol/jwbowers` and r
 $ singularity run <name-of-sif>
 ```
 which should put you in a container with an Oh My Zsh-style prompt
-
-

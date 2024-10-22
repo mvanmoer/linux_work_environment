@@ -1,8 +1,7 @@
 # Singularity Container Info
 
-NOTE: still under development.
-
-bowers-dev-env.def is a Singularity definition file. It uses a base of Ubuntu 22.04 LTS and recreates the environment described in this repo.
+* minimal.def: Definition file to create a minimal container for running manytestsr and test_performance_sims
+* bowers-prod-env.def: Definition file to replicate jwbowers full dev env, work-in-progress.
 
 ## Reproducibility
 
@@ -17,32 +16,17 @@ Because they use the actual hardware and OS kernel from the host machine, this c
 
 It is considered best practice to share both the .def and the .sif. Currently, a .sif is available on the ICC in the project directory.
 
-## Container Development vs. Production
+## Sandbox for Local Development
 Containers aren't normally modifiable because they are often meant to replicate a set environment for reproducing on other resources. A compromise approach is to build a sandbox version of the container. 
 
-`$ sudo singularity build --sandbox mysandbox mycontainer.def`
+`$ sudo singularity build --sandbox mysandbox minimal.def`
 
-Instead of creating a .sif, this will make a directory `mysandbox/`. This can be `cd`'d into to look around, but shouldn't be modified directly. To use the sandbox, launch with:
+or, more elaborately:
 
-`$ sudo singularity shell --writable mysandbox`
+`$ time sudo singularity build --sandbox mysandbox minimal.def 2>&1 | tee build.out`
 
-This will bring up a `Singularity>` prompt and now one can install additional software or make other changes. However, there is not a good way to export those back into the definition file except through copy-and-paste.
+Instead of creating a .sif, this will make a directory `mysandbox/`. This can be `cd`'d into to look around, but shouldn't be modified directly. To use the sandbox, launch with `start-sandbox.sh` which is a wrapper around `sudo singularity shell` which binds the manytestsr and test_performance_sims repos to `/mnt/manytestsr` and `/mnt/test_performance_sims`, respectively.
 
-## Using ZSH
-There are two ways to get to ZSH:
+## Image File for Production
 
-1. `$ singularity run <sif>` - the `%runscript` calls `/bin/zsh` directly. -- Use this method for Oh My Zsh to work.
-
-2. `$ singularity shell --shell /bin/zsh <sif>` 
-
-### NOTES 
-
-- MVM: had to also add `--contain` or it would still default to BASH somehow. 
-- MVM: had the zsh-newuser-install script pop up each time. I think this will be avoided since you'll already have a `.zshrc` but need to verify.
-
-## TODOs
-TODO: install onlineFDR
-TODO: install nvimcom
-TODO: install Nerd Fonts
-TODO: install kickstart.nvim
-TODO: consider putting a signed sif on a repo like dockerhub
+To build for production use on a cluster, don't use `--sandbox mysandbox`. The output will be a binary-blob `minimal.sif` which can be copied to the cluster.
